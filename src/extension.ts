@@ -76,14 +76,31 @@ new Game(
         if (ed)
         {
             // d:\wamp\www\dev\examples\src\test\renderdraw.ts
+            // /Users/rich/Documents/GitHub/dev/examples/src/test/renderdraw.ts
             const fullPath = ed.document.fileName;
 
+            const windows = 'd:\\wamp\\www\\dev\\examples\\src';
+            const mac = '/Users/rich/Documents/GitHub/dev/examples/src';
+
+            const isPC = fullPath.startsWith(windows);
+            const isMac = fullPath.startsWith(mac);
+
             //  For now, we'll only work on Windows (and my PC! but this extension is for me after all)
-            if (fullPath.startsWith('d:\\wamp\\www\\dev\\examples\\src'))
+            if (isPC || isMac)
             {
-                const outfile = fullPath.replace('d:\\wamp\\www\\dev\\examples\\src', 'd:\\wamp\\www\\dev\\examples\\live').replace('.ts', '.js');
-                const outfilemin = fullPath.replace('d:\\wamp\\www\\dev\\examples\\src', 'd:\\wamp\\www\\dev\\examples\\live').replace('.ts', '.min.js');
-                const fileName = fullPath.replace('d:\\wamp\\www\\dev\\examples\\src\\', '');
+                const windowsLive = 'd:\\wamp\\www\\dev\\examples\\live';
+                const macLive = '/Users/rich/Documents/GitHub/dev/examples/live';
+    
+                const srcPath = (isPC) ? windows : mac;
+                const livePath = (isPC) ? windowsLive : macLive;
+
+                const outfile = fullPath.replace(srcPath, livePath).replace('.ts', '.js');
+                const outfilemin = fullPath.replace(srcPath, livePath).replace('.ts', '.min.js');
+                const fileName = (isPC) ? fullPath.replace(`${windows}\\`, '') : fullPath.replace(`${mac}/`, '');
+
+                // const outfile = fullPath.replace('d:\\wamp\\www\\dev\\examples\\src', 'd:\\wamp\\www\\dev\\examples\\live').replace('.ts', '.js');
+                // const outfilemin = fullPath.replace('d:\\wamp\\www\\dev\\examples\\src', 'd:\\wamp\\www\\dev\\examples\\live').replace('.ts', '.min.js');
+                // const fileName = fullPath.replace('d:\\wamp\\www\\dev\\examples\\src\\', '');
 
                 const buildResults = buildSync({
                     entryPoints: [ fullPath ],
@@ -104,7 +121,7 @@ new Game(
                 {
                     const exampleFile = fileName.replace('.ts', '.js').replace('\\', '/');
 
-                    const exampleURL = `http://192.168.0.100/dev/examples/live/debug.html?f=${exampleFile}`;
+                    const exampleURL = (isPC) ? `http://192.168.0.100/dev/examples/live/debug.html?f=${exampleFile}` : `https://phaser4.test.local:8890/debug.html?f=${exampleFile}`;
 
                     vscode.env.clipboard.writeText(exampleURL);
 
@@ -145,7 +162,7 @@ new Game(
 
                             }).catch(error =>
                             {
-                                console.error('fucking arse', error);
+                                console.error('arsebags', error);
                             });
                         }
                     });
