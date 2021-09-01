@@ -42,7 +42,7 @@ function activate(context) {
 
 import { AddChild } from '${path}/display/';
 import { Game } from '${path}/Game';
-import { ImageFile } from '${path}/loader/files/ImageFile';
+import { LoadImageFile } from '${path}/loader/files/LoadImageFile';
 import { Loader } from '${path}/loader/Loader';
 import { Scene } from '${path}/scenes/Scene';
 import { Sprite } from '${path}/gameobjects/';
@@ -59,7 +59,7 @@ class Demo extends Scene
 
     async create ()
     {
-        await ImageFile('logo', 'assets/logo.png');
+        await LoadImageFile('logo', 'assets/logo.png');
 
         const world = new StaticWorld(this);
 
@@ -90,7 +90,6 @@ new Game(
             const mac = '/Users/rich/Documents/GitHub/dev/examples/src';
             const isPC = fullPath.startsWith(windows);
             const isMac = fullPath.startsWith(mac);
-            //  For now, we'll only work on Windows (and my PC! but this extension is for me after all)
             if (isPC || isMac) {
                 const windowsLive = 'd:\\wamp\\www\\dev\\examples\\live';
                 const macLive = '/Users/rich/Documents/GitHub/dev/examples/live';
@@ -99,9 +98,6 @@ new Game(
                 const outfile = fullPath.replace(srcPath, livePath).replace('.ts', '.js');
                 const outfilemin = fullPath.replace(srcPath, livePath).replace('.ts', '.min.js');
                 const fileName = (isPC) ? fullPath.replace(`${windows}\\`, '') : fullPath.replace(`${mac}/`, '');
-                // const outfile = fullPath.replace('d:\\wamp\\www\\dev\\examples\\src', 'd:\\wamp\\www\\dev\\examples\\live').replace('.ts', '.js');
-                // const outfilemin = fullPath.replace('d:\\wamp\\www\\dev\\examples\\src', 'd:\\wamp\\www\\dev\\examples\\live').replace('.ts', '.min.js');
-                // const fileName = fullPath.replace('d:\\wamp\\www\\dev\\examples\\src\\', '');
                 const buildResults = esbuild_1.buildSync({
                     entryPoints: [fullPath],
                     outfile,
@@ -159,6 +155,34 @@ new Game(
         }
     });
     context.subscriptions.push(disposable2);
+    let disposable3 = vscode.commands.registerCommand('phaser4examples.compile', () => {
+        const ed = vscode.window.activeTextEditor;
+        if (ed) {
+            const fullPath = ed.document.fileName;
+            const windows = 'd:\\wamp\\www\\dev\\examples\\src';
+            const mac = '/Users/rich/Documents/GitHub/dev/examples/src';
+            const isPC = fullPath.startsWith(windows);
+            const isMac = fullPath.startsWith(mac);
+            if (isPC || isMac) {
+                const windowsLive = 'examples\\src';
+                const macLive = 'examples/src';
+                const srcPath = (isPC) ? windows : mac;
+                const livePath = (isPC) ? windowsLive : macLive;
+                const srcFile = fullPath.replace(srcPath, livePath);
+                const fileName = (isPC) ? fullPath.replace(`${windows}\\`, '') : fullPath.replace(`${mac}/`, '');
+                const terminal = vscode.window.createTerminal(`Phaser 4 Example ${fileName}`);
+                // (<any>vscode.window).onDidWriteTerminalData((e: any) => {
+                //     vscode.window.showInformationMessage(`onDidWriteTerminalData listener attached, check the devtools console to see events`);
+                //     console.log('onDidWriteData', e);
+                // });
+                terminal.sendText(`node dev.mjs --src "${srcFile}"`);
+            }
+            else {
+                vscode.window.showErrorMessage('Not a Phaser 4 Example');
+            }
+        }
+    });
+    context.subscriptions.push(disposable3);
 }
 exports.activate = activate;
 function deactivate() { }

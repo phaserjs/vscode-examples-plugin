@@ -3,7 +3,7 @@
   "displayName": "Phaser 4 Examples",
   "description": "Utility functions to help with Phaser 4 development",
   "publisher": "photonstorm",
-  "version": "0.0.1",
+  "version": "0.1.2",
   "engines": {
     "vscode": "^1.58.0"
   },
@@ -12,9 +12,14 @@
   ],
   "activationEvents": [
     "onCommand:phaser4examples.build",
-    "onCommand:phaser4examples.create"
+    "onCommand:phaser4examples.create",
+    "onCommand:phaser4examples.compile"
   ],
   "main": "./out/extension.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phaserjs/vscode-examples-plugin.git"
+  },
   "contributes": {
     "commands": [
       {
@@ -24,6 +29,10 @@
       {
         "command": "phaser4examples.create",
         "title": "Phaser 4 - Create Example"
+      },
+      {
+        "command": "phaser4examples.compile",
+        "title": "Phaser 4 - Compile Example"
       }
     ]
   },
@@ -36,8 +45,10 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
-  },
+    "test": "node ./out/test/runTest.js",
+    "DEVpackage": "vsce package -o dist/phaser4examples.vsix",
+    "DEVdeploy:local": "npm run package && code --install-extension dist/phaser4examples.vsix --force"
+},
   "devDependencies": {
     "@types/glob": "^7.1.3",
     "@types/mocha": "^8.2.2",
