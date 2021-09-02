@@ -48,7 +48,7 @@
     "test": "node ./out/test/runTest.js",
     "DEVpackage": "vsce package -o dist/phaser4examples.vsix",
     "DEVdeploy:local": "npm run package && code --install-extension dist/phaser4examples.vsix --force"
-},
+  },
   "devDependencies": {
     "@types/glob": "^7.1.3",
     "@types/mocha": "^8.2.2",
@@ -64,5 +64,8 @@
     "mocha": "^8.4.0",
     "typescript": "^4.3.2",
     "vscode-test": "^1.5.2"
+  },
+  "dependencies": {
+    "esbuild-wasm": "^0.12.24"
   }
 }
